@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Electron & MySQL</title>
+  <link rel="stylesheet" href="bootstrap.min.css">
+  <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+  <script type='text/javascript' src='tab.js'></script>
+</head>
+
+<body>
+
+  <main class="container-fluid">
+
+    <div class="row">
+
+      <div class="col-md-6 p-4 ">
+        <!--
+        <input id="preescolarSelect" type="button" class="btn btn-primary" value="Preescolar">
+        <input id="primariaSelect" type="button" class="btn btn-primary" value="Primaria">
+        <input id="secundariaSelect" type="button" class="btn btn-primary" value="Secundaria">
+        <input id="educacionSelect" type="button" class="btn btn-primary" value="Educación Abierta">
+        -->
+
+        <!-- Tab links -->
+
+
+        <button id="preescolarSelect" class="btn btn-primary" onclick="openCity(event, 'preescolar_tab')">Preescolar</button>
+        <button id="primariaSelect" class="btn btn-primary" onclick="openCity(event, 'primaria_tab')">Primaria</button>
+        <button id="secundariaSelect" class="btn btn-primary" onclick="openCity(event, 'secundaria_tab')">Secundaria</button>
+        <button id="educacionSelect" class="btn btn-primary" onclick="openCity(event, 'EduAbierta_tab')">Educación Abierta</button>
+
+
+        <!-- Tab content -->
+        <div id="preescolar_tab" class="tabcontent">
+          <hr/>
+          <h3>Preescolar</h3>
+          <hr/>
+          <form id="preescolarForm" class="card card-body">
+
+
+
+            <div class="form-group">
+              <h4>Nombre de Institución</h4>
+              <input type="text" id="nombre" placeholder="Nombre" class="form-control" autofocus>
+            </div>
+            <div class="form-group">
+              <h4>Código Presupuestario</h4>
+              <input type="text" id="codigo" placeholder="Codigo" step="any" class="form-control">
+            </div>
+            <div class="form-group">
+              <h4>Director</h4>
+              <input type="text" id="director" placeholder="Director" step="any" class="form-control">
+            </div>
+            <div class="form-group">
+              <h4>Teléfono</h4>
+              <input type="text" id="telefono" placeholder="0000-0000" step="any" class="form-control">
+            </div>
+            <div class="form-group">
+              <h4>Correo Electrónico</h4>
+              <input type="email" id="email" placeholder="Correo Electronico" step="any" class="form-control">
+            </div>
+            <div class="form-group">
+              <h4>Ubicación de la Institución</h4>
+              <input type="text" id="direccion" placeholder="Direccion" step="any" class="form-control">
+            </div>
+            <div class="form-group">
+              <h4>Tipo de Dirección</h4>
+              <input type="text" id="tipo_direc" placeholder="Tipo Direccion" step="any" class="form-control">
+            </div>
+            <div class="form-group">
+              <h4>Matrícula Inicial</h4>
+              <input type="text" id="matricula_inicial" placeholder="Matricula Inicial" step="any" class="form-control">
+            </div>
+            <div class="form-group">
+              <h4>Matrícula Final</h4>
+              <input type="text" id="matricula_final" placeholder="Matricula Final" step="any" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Guardar
+            </button>
+
+
+          </form>
+        </div>
+
+        <div id="primaria_tab" class="tabcontent">
+          <hr/>
+          <h3>Primaria</h3>
+          <hr/>
+          <form id="preescolarForm" class="card card-body">
+
+
+
+            <div class="form-group">
+              <h4>Nombre de Institución</h4>
+              <input type="text" id="nombre" placeholder="Nombre" class="form-control" autofocus>
+            </div>
+            <div class="form-group">
+              <h4>Código Presupuestario</h4>
+              <input type="text" id="codigo" placeholder="Codigo" step="any" class="form-control">
+            </div>
+
+
+
+            <div class="form-group">
+              <h4>Ubicación de la Institución</h4>
+              <input type="text" id="direccion" placeholder="Direccion" step="any" class="form-control">
+            </div>
+            <div class="form-group">
+              <h4>Tipo de Dirección</h4>
+              <input type="text" id="tipo_direc" placeholder="Tipo Direccion" step="any" class="form-control">
+            </div>
+            <div class="form-group">
+              <h4>Matrícula Inicial</h4>
+              <input type="text" id="matricula_inicial" placeholder="Matricula Inicial" step="any" class="form-control">
+            </div>
+            <div class="form-group">
+              <h4>Matrícula Final</h4>
+              <input type="text" id="matricula_final" placeholder="Matricula Final" step="any" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Guardar
+            </button>
+
+
+          </form>
+        </div>
+
+        <div id="secundaria_tab" class="tabcontent"> 
+          <hr/>
+          <h3>Secundaria</h3>
+          <hr/>
+          <form id="preescolarForm" class="card card-body">
+
+
+
+            <div class="form-group">
+              <h4>Nombre de Institución</h4>
+              <input type="text" id="nombre" placeholder="Nombre" class="form-control" autofocus>
+            </div>
+            <div class="form-group">
+              <h4>Código Presupuestario</h4>
+              <input type="text" id="codigo" placeholder="Codigo" step="any" class="form-control">
+            </div>
+            <div class="form-group">
+              <h4>Director</h4>
+              <input type="text" id="director" placeholder="Director" step="any" class="form-control">
+            </div>
+            <div class="form-group">
+              <h4>Teléfono</h4>
+              <input type="text" id="telefono" placeholder="0000-0000" step="any" class="form-control">
+            </div>
+            <div class="form-group">
+              <h4>Correo Electrónico</h4>
+              <input type="email" id="email" placeholder="Correo Electronico" step="any" class="form-control">
+            </div>
+            <div class="form-group">
+              <h4>Ubicación de la Institución</h4>
+              <input type="text" id="direccion" placeholder="Direccion" step="any" class="form-control">
+            </div>
+            <div class="form-group">
+              <h4>Tipo de Dirección</h4>
+              <input type="text" id="tipo_direc" placeholder="Tipo Direccion" step="any" class="form-control">
+            </div>
+            <div class="form-group">
+              <h4>Matrícula Inicial</h4>
+              <input type="text" id="matricula_inicial" placeholder="Matricula Inicial" step="any" class="form-control">
+            </div>
+            <div class="form-group">
+              <h4>Matrícula Final</h4>
+              <input type="text" id="matricula_final" placeholder="Matricula Final" step="any" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Guardar
+            </button>
+
+
+          </form>
+        </div>
+        <div id="EduAbierta_tab" class="tabcontent">
+          <hr/>
+          <h3>Educación Abierta</h3>
+          <hr/>
+          <form id="preescolarForm" class="card card-body">
+
+
+
+            <div class="form-group">
+              <h4>Nombre de Institución</h4>
+              <input type="text" id="nombre" placeholder="Nombre" class="form-control" autofocus>
+            </div>
+            <div class="form-group">
+              <h4>Código Presupuestario</h4>
+              <input type="text" id="codigo" placeholder="Codigo" step="any" class="form-control">
+            </div>
+            <div class="form-group">
+              <h4>Ubicación de la Institución</h4>
+              <input type="text" id="direccion" placeholder="Direccion" step="any" class="form-control">
+            </div>
+            <div class="form-group">
+              <h4>Tipo de Dirección</h4>
+              <input type="text" id="tipo_direc" placeholder="Tipo Direccion" step="any" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <h4>Cantidad Matrícula</h4>
+              <input type="text" id="matricula_final" placeholder="Matricula Final" step="any" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Guardar
+            </button>
+
+
+          </form>
+        </div>
+        <!-- Product Form -->
+        <!--
+        <form id="preescolarForm" class="card card-body">
+          
+
+           
+             <div class="form-group">
+            <h4>Nombre de Institución</h4>
+            <input type="text" id="nombre" placeholder="Nombre" class="form-control" autofocus>
+          </div>
+          <div class="form-group">
+            <h4>Código Presupuestario</h4>
+            <input type="text" id="codigo" placeholder="Codigo" step="any" class="form-control">
+          </div>
+          <div class="form-group">
+            <h4>Director</h4>
+            <input type="text" id="director" placeholder="Director" step="any" class="form-control">
+          </div>
+          <div class="form-group">
+            <h4>Teléfono</h4>
+            <input type="text" id="telefono" placeholder="0000-0000" step="any" class="form-control">
+          </div>
+          <div class="form-group">
+            <h4>Correo Electrónico</h4>
+            <input type="email" id="email" placeholder="Correo Electronico" step="any" class="form-control">
+          </div>
+          <div class="form-group">
+            <h4>Ubicación de la Institución</h4>
+            <input type="text" id="direccion" placeholder="Direccion" step="any" class="form-control">
+          </div>
+          <div class="form-group">
+            <h4>Tipo de Dirección</h4>
+            <input type="text" id="tipo_direc" placeholder="Tipo Direccion" step="any" class="form-control">
+          </div>
+          <div class="form-group">
+            <h4>Matrícula Inicial</h4>
+            <input type="text" id="matricula_inicial" placeholder="Matricula Inicial" step="any" class="form-control">
+          </div>
+          <div class="form-group">
+            <h4>Matrícula Final</h4>
+            <input type="text" id="matricula_final" placeholder="Matricula Final" step="any" class="form-control">
+          </div>
+          <button type="submit" class="btn btn-primary">
+            Save
+          </button>
+          
+        
+          </form>-->
+      </div>
+
+      <!-- Product List -->
+      <div class="col-md-6">
+        <div id="preescolar"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="./app.js"></script>
+
+</body>
+
+</html>
