@@ -4,6 +4,7 @@ const { getConnection } = require("./database");
 
 let window;
 
+//Preescolar
 const createPreescolar = async (preescolar) => {
   try {
     const conn = await getConnection();
@@ -54,6 +55,62 @@ const updatePreescolar = async (id, preescolar) => {
   console.log(result)
 };
 
+
+
+//Primaria
+
+const createPrimaria = async (primaria) => {
+  try {
+    const conn = await getConnection();
+    
+    const result = await conn.query("INSERT INTO primaria SET ?", primaria);
+    primaria.id = result.insertId;
+
+    // Notify the User
+    new Notification({
+      title: "Circuito 05",
+      body: "Primaria agregado",
+    }).show();
+
+    // Return the created Primaria
+    return primaria;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+
+const getPrimaria = async () => {
+  const conn = await getConnection();
+  const results = await conn.query("SELECT * FROM primaria ORDER BY id DESC");
+  return results;
+};
+
+const deletePrimaria = async (id) => {
+  const conn = await getConnection();
+  const result = await conn.query("DELETE FROM primaria WHERE id = ?", id);
+  return result;
+};
+
+const getPrimariaById = async (id) => {
+  const conn = await getConnection();
+  const result = await conn.query("SELECT * FROM primaria WHERE id = ?", id);
+  console.log(result);
+  return result[0];
+};
+
+const updatePrimaria = async (id, primaria) => {   
+  const conn = await getConnection();
+  const result = await conn.query("UPDATE primaria SET ? WHERE Id = ?", [
+    primaria,
+    id,
+  ]);
+  console.log(result)
+};
+
+
+
 function createWindow() {
   window = new BrowserWindow({
     width: 2100,
@@ -73,5 +130,10 @@ module.exports = {
   getPreescolar,
   deletePreescolar,
   getPreescolarById,
-  updatePreescolar
+  updatePreescolar,
+  createPrimaria,
+  getPrimaria,
+  deletePrimaria,
+  getPrimariaById,
+  updatePrimaria
 };

@@ -1,7 +1,8 @@
 const { remote } = require("electron");
+const { getPrimaria } = require("../main");
 const main = remote.require("./main");
 
-
+//Preescolar
 const preescolarForm = document.querySelector("#preescolarForm");
 const preescolarName = document.querySelector("#nombre");
 const preescolarCodigo = document.querySelector("#codigo");
@@ -14,6 +15,19 @@ const preescolarMatriculaI = document.querySelector("#matricula_inicial");
 const preescolarMatriculaF = document.querySelector("#matricula_final");
 const preescolarList = document.querySelector("#preescolar");
 const preescolarListForm = document.querySelector("#preescolarForm");
+
+
+//Primaria
+const primariaForm = document.querySelector("#primariaForm");
+const primariaName = document.querySelector("#nombre_primaria");
+const primariaCodigo = document.querySelector("#codigo_primaria");
+const primariaTelefono = document.querySelector("#telefono_primaria");
+const primariaCorreo = document.querySelector("#email_primaria");
+const primariaTipoDirec = document.querySelector("#tipo_direc_primaria");
+const primariaModalidad = document.querySelector("#modalidad_institucion_primaria");
+const primariaListForm = document.querySelector("#primariaForm");
+const primariaList = document.querySelector("#preescolar");
+
 /*
 alert(preescolarName);
 alert(preescolarCodigo);
@@ -28,8 +42,10 @@ const selectEduAbierta = document.querySelector("educacionSelect");
 
 
 let preescolar = [];
+let primaria = [];
 let editingStatus = false;
 let editPreescolarId;
+let editPrimariaId;
 
 const deletePreescolar = async (id) => {
  
@@ -38,7 +54,7 @@ const deletePreescolar = async (id) => {
 await preescolarForm.focus();
 
     await main.deletePreescolar(id);
-    await getPreescolar();
+    await getPreescolar(1);
     await preescolarForm.focus();
 
 
@@ -67,9 +83,10 @@ const editPreescolar = async (id) => {
   preescolarMatriculaI.value = preescolar.Matricula_Inicial;
   preescolarMatriculaF.value = preescolar.Matricula_Final;
   
-  console.log(preescolar);
+  //console.log(preescolar);
   editingStatus = true;
   editPreescolarId = id;
+  getPreescolar(1);
 };
 
 preescolarForm.addEventListener("submit", async (e) => {
@@ -92,6 +109,7 @@ preescolarForm.addEventListener("submit", async (e) => {
     if (!editingStatus) {
       const savedPreescolar = await main.createPreescolar(preescolar);
       console.log(savedPreescolar);
+      getPreescolar(1);
     } else {
 
       const preescolarUpdated = await main.updatePreescolar(editPreescolarId, preescolar);
@@ -100,11 +118,12 @@ preescolarForm.addEventListener("submit", async (e) => {
       // Reset
       editingStatus = false;
       editPreescolarId = "";
+      getPreescolar(1);
     }
 
     preescolarForm.reset();
     preescolarName.focus();
-    getPreescolar();
+    getPreescolar(1);
   } catch (error) {
     console.log(error);
   }
@@ -159,224 +178,169 @@ function renderPreescolar(tasks) {
     `;
   });
 }
+const getPreescolar = async (identifier) => {
+  console.log(identifier);
+  if(identifier==1){
+    preescolar = await main.getPreescolar();
+    renderPreescolar(preescolar);
+  }else if(identifier==2){
+    primaria = await main.getPrimaria();
+    renderPrimaria(primaria);
+  }
+ 
 
+};
 
+//Primaria
+
+const deletePrimaria = async (id) => {
+ 
+  try{
+ 
+ await primariaForm.focus();
+ 
+     await main.deletePrimaria(id);
+     await getPreescolar(2);
+     await prrimariaForm.focus();
+
+  }catch(error){
+   console.log(error);
+  }
+  await primariaForm.focus();
+ };
+ 
+ const editPrimaria = async (id) => {
+   const primaria = await main.getPrimariaById(id);
+   console.log(primaria);
+   primariaName.value = primaria.Nombre_Institucion;
+   primariaCodigo.value = primaria.Codigo_Presupuestiario;
+   primariaTelefono.value = primaria.Telefono;
+   primariaCorreo.value = primaria.Correo_Electronico;
+   primariaTipoDirec.value = primaria.Tipo_Direccion;
+   primariaModalidad.value = primaria.Modalidad_Institucion;
+
+   
+   console.log(primaria);
+   editingStatus = true;
+   editPrimariaId = id;
+   getPreescolar(2);
+ };
+ 
+ primariaForm.addEventListener("submit", async (e) => {
+  // alert('hola');
+   try {
+     e.preventDefault();
+ 
+     const primaria = {
+       Nombre_Institucion: primariaName.value,
+       Codigo_Presupuestiario: primariaCodigo.value,
+       Telefono: primariaTelefono.value,
+       Correo_Electronico: primariaCorreo.value,
+       Tipo_Direccion: primariaTipoDirec.value,
+       Modalidad_Institucion: primariaModalidad.value,
+      
+     };
+     //console.log(primariaDirector.value);
+     if (!editingStatus) {
+       const savedPrimaria = await main.createPrimaria(primaria);
+       console.log(savedPrimaria);
+       getPreescolar(2);
+     } else {
+ 
+       const primariaUpdated = await main.updatePrimaria(editPrimariaId, primaria);
+       console.log(primariaUpdated);
+ 
+       // Reset
+       editingStatus = false;
+       editPrimariaId = "";
+       getPreescolar(2);
+     }
+ 
+     primariaForm.reset();
+     primariaName.focus();
+     getPreescolar(2);
+   } catch (error) {
+     console.log(error);
+   }
+ });
+ 
+ function renderPrimaria(tasks) {
+   primariaList.innerHTML = "";
+   tasks.forEach((t) => {
+     primariaList.innerHTML += `
+       <div class="card card-body my-2 animated fadeInLeft">
+    
+  <table class="table wrap-text">
+  
+   <tbody>
+     <tr>
+       <td>
+       <h4>Institución</h4>
+       <p>${t.Nombre_Institucion}</p>
+       <h4>Codigo Presupuestario</h4>
+       <p>${t.Codigo_Presupuestiario}</p>
+       <h4>Telefono</h4>
+       <p>${t.Telefono}</p>
+       </td>
+       <td>
+       <h4>Email</h4>
+       <p>${t.Correo_Electronico}</p>
+       <h4>Dirección</h4>
+       <p>${t.Tipo_Direccion}</p>
+       <h4>Modalidad Institucion</h4>
+       <p>${t.Modalidad_Institucion}</p>
+       </td>
+     </tr>
+   </tbody>
+ </table>
+  <p>
+         <button class="btn btn-danger btn-sm" onclick="deletePrimaria('${t.id}')">
+           DELETE
+         </button>
+         <button class="btn btn-secondary btn-sm" onclick="editPrimaria('${t.id}')">
+           EDIT 
+         </button>
+         </p>
+       </div>
+     `;
+   });
+ }
+ 
 
 /*
-function renderPreescolarForm() {
-  preescolarListForm.innerHTML = "";
- 
-    preescolarListForm.innerHTML += `
-    <div class="form-group">
-            <h4>Nombre de Institución</h4>
-            <input type="text" id="nombre" placeholder="Nombre" class="form-control" autofocus>
-          </div>
-          <div class="form-group">
-            <h4>Código Presupuestario</h4>
-            <input type="text" id="codigo" placeholder="Codigo" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Director</h4>
-            <input type="text" id="director" placeholder="Director" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Teléfono</h4>
-            <input type="text" id="telefono" placeholder="0000-0000" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Correo Electrónico</h4>
-            <input type="email" id="email" placeholder="Correo Electronico" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Ubicación de la Institución</h4>
-            <input type="text" id="direccion" placeholder="Direccion" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Tipo de Dirección</h4>
-            <input type="text" id="tipo_direc" placeholder="Tipo Direccion" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Matrícula Inicial</h4>
-            <input type="text" id="matricula_inicial" placeholder="Matricula Inicial" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Matrícula Final</h4>
-            <input type="text" id="matricula_final" placeholder="Matricula Final" step="any" class="form-control">
-          </div>
-          <button type="submit" class="btn btn-primary">
-            Save
-          </button>
-     
-    `;
-}*/
-/*
-function renderPrimariaForm() {
-  preescolarListForm.innerHTML = "";
- 
-    preescolarListForm.innerHTML += `
-    <div class="form-group">
-            <h4>Nombre de Institución</h4>
-            <input type="text" id="nombre" placeholder="Nombre" class="form-control" autofocus>
-          </div>
-          <div class="form-group">
-            <h4>Código Presupuestario</h4>
-            <input type="text" id="codigo" placeholder="Codigo" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Director</h4>
-            <input type="text" id="director" placeholder="Director" step="any" class="form-control">
-          </div>
-         
-        
-          <div class="form-group">
-            <h4>Ubicación de la Institución</h4>
-            <input type="text" id="direccion" placeholder="Direccion" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Tipo de Dirección</h4>
-            <input type="text" id="tipo_direc" placeholder="Tipo Direccion" step="any" class="form-control">
-          </div>
-          <button type="submit" class="btn btn-primary">
-            Save
-          </button>
-     
-    `;
+function getPrimaria(){
+primaria = main.getPrimaria();
+renderPrimaria(primaria);
 }
-function renderSecundariaForm() {
-  preescolarListForm.innerHTML = "";
- 
-    preescolarListForm.innerHTML += `
-    <div class="form-group">
-            <h4>Nombre de Institución</h4>
-            <input type="text" id="nombre" placeholder="Nombre" class="form-control" autofocus>
-          </div>
-          <div class="form-group">
-            <h4>Código Presupuestario</h4>
-            <input type="text" id="codigo" placeholder="Codigo" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Director</h4>
-            <input type="text" id="director" placeholder="Director" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Teléfono</h4>
-            <input type="text" id="telefono" placeholder="0000-0000" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Correo Electrónico</h4>
-            <input type="email" id="email" placeholder="Correo Electronico" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Ubicación de la Institución</h4>
-            <input type="text" id="direccion" placeholder="Direccion" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Tipo de Dirección</h4>
-            <input type="text" id="tipo_direc" placeholder="Tipo Direccion" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Matrícula Inicial</h4>
-            <input type="text" id="matricula_inicial" placeholder="Matricula Inicial" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Matrícula Final</h4>
-            <input type="text" id="matricula_final" placeholder="Matricula Final" step="any" class="form-control">
-          </div>
-          <button type="submit" class="btn btn-primary">
-            Save
-          </button>
-     
-    `;
-}
-
-function renderEduAbiertaForm() {
-  preescolarListForm.innerHTML = "";
- 
-    preescolarListForm.innerHTML += `
-    <div class="form-group">
-            <h4>Nombre de Institución</h4>
-            <input type="text" id="nombre" placeholder="Nombre" class="form-control" autofocus>
-          </div>
-          <div class="form-group">
-            <h4>Código Presupuestario</h4>
-            <input type="text" id="codigo" placeholder="Codigo" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Director</h4>
-            <input type="text" id="director" placeholder="Director" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Teléfono</h4>
-            <input type="text" id="telefono" placeholder="0000-0000" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Correo Electrónico</h4>
-            <input type="email" id="email" placeholder="Correo Electronico" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Ubicación de la Institución</h4>
-            <input type="text" id="direccion" placeholder="Direccion" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Tipo de Dirección</h4>
-            <input type="text" id="tipo_direc" placeholder="Tipo Direccion" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Matrícula Inicial</h4>
-            <input type="text" id="matricula_inicial" placeholder="Matricula Inicial" step="any" class="form-control">
-          </div>
-          <div class="form-group">
-            <h4>Matrícula Final</h4>
-            <input type="text" id="matricula_final" placeholder="Matricula Final" step="any" class="form-control">
-          </div>
-          <button type="submit" class="btn btn-primary">
-            Save
-          </button>
-     
-    `;
-}
-
-
 */
 
 
-const getPreescolar = async () => {
-  preescolar = await main.getPreescolar();
-  renderPreescolar(preescolar);
-
-};
-/*
-const getFormPreescolar = async () => {
- // if((selectPreescolar.value)=='Preescolar'){
-    renderPreescolarForm();
-  //}
-  
-
-};*/
-
+let accion = 0;
 document.getElementById('preescolarSelect').addEventListener('click', () => {
- // renderPreescolarForm();
-
- /*Render los cards de la derecha */
- //alert('Hola');
+ getPreescolar(1);
+ 
 })
 document.getElementById('primariaSelect').addEventListener('click', () => {
-  //renderPrimariaForm();
-  //alert('Hola');
+  getPreescolar(2);
+
 })
 document.getElementById('secundariaSelect').addEventListener('click', () => {
- // renderSecundariaForm();
- //alert('Hola');
+
+
 })
 document.getElementById('educacionSelect').addEventListener('click', () => {
-  //alert('Hola');
-  
-  //renderEduAbiertaForm();
+
+
 })
 
 async function init() {
   //getFormPreescolar();
-  getPreescolar();
+
+    getPreescolar(1);
+ 
+    //getPrimaria();
+  
+ 
 }
 
 init();
