@@ -28,6 +28,21 @@ const primariaModalidad = document.querySelector("#modalidad_institucion_primari
 const primariaListForm = document.querySelector("#primariaForm");
 const primariaList = document.querySelector("#preescolar");
 
+
+//Secundaria
+const secundariaForm = document.querySelector("#secundariaForm");
+const secundariaName = document.querySelector("#nombre_secundaria");
+const secundariaCodigo = document.querySelector("#codigo_secundaria");
+const secundariaTipoDirec = document.querySelector("#tipo_direc_secundaria");
+const secundariaMatriculaTotal = document.querySelector("#matricula_total_secundaria");
+const secundariaDocenteLabora = document.querySelector("#cantidad_docente_labora_secundaria");
+const secundariaDocenteReubicado = document.querySelector("#cantidad_docente_reubicado_secundaria");
+const secundariaAdministrativoLabora = document.querySelector("#cantidad_administrativo_labora_secundaria");
+const secundariaAdministrativoReubicado = document.querySelector("#cantidad_administrativo_reubicado_secundaria");
+const secundariaContieneEduAbierta = document.querySelector("#contiene_edu_abierta_secundaria");
+const secundariaListForm = document.querySelector("#primariaForm");
+const secundariaList = document.querySelector("#preescolar");
+//alert(secundariaMatriculaTotal);
 /*
 alert(preescolarName);
 alert(preescolarCodigo);
@@ -38,15 +53,19 @@ const selectPreescolar = document.getElementById("preescolarSelect");
 const selectPrimaria = document.querySelector("primariaSelect");
 const selectSecundaria = document.querySelector("secundariaSelect");
 const selectEduAbierta = document.querySelector("educacionSelect");
+
 /*no me sirve el save y edit porque uso otro formulario */
 
 
 let preescolar = [];
 let primaria = [];
+let secundaria = [];
 let editingStatus = false;
 let editPreescolarId;
 let editPrimariaId;
+let editSecundariaId;
 
+//Preescolar
 const deletePreescolar = async (id) => {
  
  try{
@@ -57,16 +76,9 @@ await preescolarForm.focus();
     await getPreescolar(1);
     await preescolarForm.focus();
 
-
-
-
-  
- 
  }catch(error){
   console.log(error);
- 
  }
- 
  await preescolarForm.focus();
 };
 
@@ -168,10 +180,10 @@ function renderPreescolar(tasks) {
 </table>
  <p>
         <button class="btn btn-danger btn-sm" onclick="deletePreescolar('${t.id}')">
-          DELETE
+        BORRAR
         </button>
         <button class="btn btn-secondary btn-sm" onclick="editPreescolar('${t.id}')">
-          EDIT 
+          EDITAR 
         </button>
         </p>
       </div>
@@ -186,8 +198,13 @@ const getPreescolar = async (identifier) => {
   }else if(identifier==2){
     primaria = await main.getPrimaria();
     renderPrimaria(primaria);
-  }
- 
+  } else if(identifier==3){
+    secundaria = await main.getSecundaria();
+    console.log("---------------------")
+    console.log(secundaria);
+    console.log("---------------------")
+    renderSecundaria(secundaria);
+  } 
 
 };
 
@@ -201,7 +218,7 @@ const deletePrimaria = async (id) => {
  
      await main.deletePrimaria(id);
      await getPreescolar(2);
-     await prrimariaForm.focus();
+     await primariaForm.focus();
 
   }catch(error){
    console.log(error);
@@ -295,10 +312,10 @@ const deletePrimaria = async (id) => {
  </table>
   <p>
          <button class="btn btn-danger btn-sm" onclick="deletePrimaria('${t.id}')">
-           DELETE
+           BORRAR
          </button>
          <button class="btn btn-secondary btn-sm" onclick="editPrimaria('${t.id}')">
-           EDIT 
+           EDITAR 
          </button>
          </p>
        </div>
@@ -307,12 +324,135 @@ const deletePrimaria = async (id) => {
  }
  
 
-/*
-function getPrimaria(){
-primaria = main.getPrimaria();
-renderPrimaria(primaria);
-}
-*/
+
+
+//Secundaria
+
+const deleteSecundaria = async (id) => {
+ 
+  try{
+ 
+ await secundariaForm.focus();
+ 
+     await main.deleteSecundaria(id);
+     await getPreescolar(3);
+     await prrimariaForm.focus();
+
+  }catch(error){
+   console.log(error);
+  }
+  await secundariaForm.focus();
+ };
+ 
+ const editSecundaria = async (id) => {
+   const secundaria = await main.getSecundariaById(id);
+   console.log(secundaria);
+   secundariaName.value = secundaria.Nombre_Institucion;
+   secundariaCodigo.value = secundaria.Codigo_Presupuestiario;
+   secundariaTipoDirec.value = secundaria.Tipo_Direccion;
+   secundariaMatriculaTotal.value = secundaria.Matricula_Total;
+   secundariaDocenteLabora.value = secundaria.Cantidad_Docente_Labora;
+   secundariaDocenteReubicado.value = secundaria.Cantidad_Docente_Reubicado;
+   secundariaAdministrativoLabora.value = secundaria.Cantidad_Administrativo_Labora;
+   secundariaAdministrativoReubicado.value = secundaria.Cantidad_Administrativo_Reubicado;
+   secundariaContieneEduAbierta.value = secundaria.Contiene_Educacion_Abierta;
+   //console.log(secundaria);
+   editingStatus = true;
+   editSecundariaId = id;
+   getPreescolar(3);
+ };
+ 
+ secundariaForm.addEventListener("submit", async (e) => {
+   try {
+     e.preventDefault();
+ 
+     const secundaria = {
+       Nombre_Institucion: secundariaName.value,
+       Codigo_Presupuestiario: secundariaCodigo.value,
+       Tipo_Direccion: secundariaTipoDirec.value,
+       Matricula_Total: secundariaMatriculaTotal.value,
+       Cantidad_Docente_Labora: secundariaDocenteLabora.value,
+       Cantidad_Docente_Reubicado: secundariaDocenteReubicado.value,
+       Cantidad_Administrativo_Labora: secundariaAdministrativoLabora.value,
+       Cantidad_Administrativo_Reubicado: secundariaAdministrativoReubicado.value,
+       Contiene_Educacion_Abierta: secundariaContieneEduAbierta.value,
+     };
+     console.log('ACAAAAAAA');
+     console.log(secundaria);
+     console.log('&&&&^&^&&^');
+     //console.log(primariaDirector.value);
+     if (!editingStatus) {
+       const savedSecundaria = await main.createSecundaria(secundaria);
+       console.log(savedSecundaria);
+       getPreescolar(3);
+     } else {
+ 
+       const secundariaUpdated = await main.updateSecundaria(editSecundariaId, secundaria);
+       console.log(secundariaUpdated);
+ 
+       // Reset
+       editingStatus = false;
+       editSecundariaId = "";
+       getPreescolar(3);
+     }
+ 
+     secundariaForm.reset();
+     secundariaName.focus();
+     getPreescolar(3);
+   } catch (error) {
+     console.log(error);
+   }
+ });
+ 
+ function renderSecundaria(tasks) {
+   secundariaList.innerHTML = "";
+   tasks.forEach((t) => {
+     secundariaList.innerHTML += `
+       <div class="card card-body my-2 animated fadeInLeft">
+    
+  <table class="table wrap-text">
+  
+   <tbody>
+     <tr>
+       <td>
+       <h4>Institución</h4>
+       <p>${t.Nombre_Institucion}</p>
+       <h4>Codigo Presupuestario</h4>
+       <p>${t.Codigo_Presupuestiario}</p>
+       <h4>Tipo Dirección</h4>
+       <p>${t.Tipo_Direccion}</p>
+       <h4>Matrícula Total</h4>
+       <p>${t.Matricula_Total}</p>
+       </td>
+       <td>
+       <h4>Personal Docente Labora</h4>
+       <p>${t.Cantidad_Docente_Labora}</p>
+       <h4>Personal Docente Reubicado</h4>
+       <p>${t.Cantidad_Docente_Reubicado}</p>
+       <h4>Personal Administrativo Labora</h4>
+       <p>${t.Cantidad_Administrativo_Labora}</p>
+       <h4>Personal Administrativo Reubicado</h4>
+       <p>${t.Cantidad_Administrativo_Reubicado}</p>
+       <h4>Contiene Educación Abierta</h4>
+       <p>${t.Contiene_Educacion_Abierta}</p>
+       </td>
+     </tr>
+   </tbody>
+ </table>
+  <p>
+         <button class="btn btn-danger btn-sm" onclick="deleteSecundaria('${t.id}')">
+           BORRAR
+         </button>
+         <button class="btn btn-secondary btn-sm" onclick="editSecundaria('${t.id}')">
+           EDITAR 
+         </button>
+         </p>
+       </div>
+     `;
+   });
+ }
+
+
 
 
 let accion = 0;
@@ -325,6 +465,7 @@ document.getElementById('primariaSelect').addEventListener('click', () => {
 
 })
 document.getElementById('secundariaSelect').addEventListener('click', () => {
+  getPreescolar(3);
 
 
 })
@@ -332,6 +473,23 @@ document.getElementById('educacionSelect').addEventListener('click', () => {
 
 
 })
+document.getElementById('reset_preescolar').addEventListener('click', () => {
+  editingStatus = false;
+
+})
+document.getElementById('reset_primaria').addEventListener('click', () => {
+  editingStatus = false;
+
+})
+document.getElementById('reset_secundaria').addEventListener('click', () => {
+  editingStatus = false;
+
+})
+document.getElementById('reset_edu_abierta').addEventListener('click', () => {
+  editingStatus = false;
+
+})
+
 
 async function init() {
   //getFormPreescolar();

@@ -109,6 +109,56 @@ const updatePrimaria = async (id, primaria) => {
   console.log(result)
 };
 
+//Secundaria
+
+const createSecundaria = async (secundaria) => {
+  try {
+    const conn = await getConnection();
+    
+    const result = await conn.query("INSERT INTO secundaria SET ?", secundaria);
+    secundaria.id = result.insertId;
+
+    // Notify the User
+    new Notification({
+      title: "Circuito 05",
+      body: "Secundaria agregado",
+    }).show();
+
+    return secundaria;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+
+const getSecundaria = async () => {
+  const conn = await getConnection();
+  const results = await conn.query("SELECT * FROM secundaria ORDER BY id DESC");
+  return results;
+};
+
+const deleteSecundaria = async (id) => {
+  const conn = await getConnection();
+  const result = await conn.query("DELETE FROM secundaria WHERE id = ?", id);
+  return result;
+};
+
+const getSecundariaById = async (id) => {
+  const conn = await getConnection();
+  const result = await conn.query("SELECT * FROM secundaria WHERE id = ?", id);
+  console.log(result);
+  return result[0];
+};
+
+const updateSecundaria = async (id, secundaria) => {   
+  const conn = await getConnection();
+  const result = await conn.query("UPDATE secundaria SET ? WHERE Id = ?", [
+    secundaria,
+    id,
+  ]);
+  console.log(result)
+};
 
 
 function createWindow() {
@@ -135,5 +185,10 @@ module.exports = {
   getPrimaria,
   deletePrimaria,
   getPrimariaById,
-  updatePrimaria
+  updatePrimaria,
+  createSecundaria,
+  getSecundaria,
+  deleteSecundaria,
+  getSecundariaById,
+  updateSecundaria
 };
