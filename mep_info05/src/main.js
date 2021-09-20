@@ -161,6 +161,59 @@ const updateSecundaria = async (id, secundaria) => {
 };
 
 
+//Educacion Abierta
+
+const createEducacionAbierta = async (educacionAbierta) => {
+  try {
+    const conn = await getConnection();
+    
+    const result = await conn.query("INSERT INTO educacion_abierta SET ?", educacionAbierta);
+    educacionAbierta.id = result.insertId;
+
+    // Notify the User
+    new Notification({
+      title: "Circuito 05",
+      body: "Educación Abierta agregado",
+    }).show();
+
+    // Return the created Primaria
+    return educacionAbierta;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+
+const getEducacionAbierta = async () => {
+  const conn = await getConnection();
+  const results = await conn.query("SELECT * FROM educacion_abierta ORDER BY id DESC");
+  return results;
+};
+
+const deleteEducacionAbierta = async (id) => {
+  const conn = await getConnection();
+  const result = await conn.query("DELETE FROM educacion_abierta WHERE id = ?", id);
+  return result;
+};
+
+const getEducacionAbiertaById = async (id) => {
+  const conn = await getConnection();
+  const result = await conn.query("SELECT * FROM educacion_abierta WHERE id = ?", id);
+  console.log(result);
+  return result[0];
+};
+
+const updateEducacionAbierta = async (id, educacionAbierta) => {   
+  const conn = await getConnection();
+  const result = await conn.query("UPDATE educacion_abierta SET ? WHERE Id = ?", [
+    educacionAbierta,
+    id,
+  ]);
+  console.log(result)
+};
+
+
 function createWindow() {
   window = new BrowserWindow({
     width: 2100,
@@ -191,5 +244,10 @@ module.exports = {
   getSecundaria,
   deleteSecundaria,
   getSecundariaById,
-  updateSecundaria
+  updateSecundaria,
+  createEducacionAbierta,
+  getEducacionAbierta,
+  deleteEducacionAbierta,
+  getEducacionAbiertaById,
+  updateEducacionAbierta
 };

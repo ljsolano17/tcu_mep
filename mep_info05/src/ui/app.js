@@ -49,6 +49,20 @@ alert(preescolarCodigo);
 alert(preescolarDirector);
 alert(preescolarCorreo);*/
 
+
+//Educacion Abierta
+const educacionAbiertaForm = document.querySelector("#edu_abierta_Form");
+const educacionAbiertaName = document.querySelector("#nombre_educacion_abierta");
+const educacionAbiertaDireccion = document.querySelector("#direccion_educacion_abierta");
+const educacionAbiertaTelefono = document.querySelector("#telefono_educacion_abierta");
+const educacionAbiertaDirector = document.querySelector("#director_educacion_abierta");
+const educacionAbiertaMatriculaTotal = document.querySelector("#matricula_total_educacion_abierta");
+const educacionAbiertaHorario = document.querySelector("#horario_educacion_abierta");
+const educacionAbiertaListForm = document.querySelector("#edu_abierta_Form");
+const educacionAbiertaList = document.querySelector("#preescolar");
+
+
+
 const selectPreescolar = document.getElementById("preescolarSelect");
 const selectPrimaria = document.querySelector("primariaSelect");
 const selectSecundaria = document.querySelector("secundariaSelect");
@@ -60,10 +74,14 @@ const selectEduAbierta = document.querySelector("educacionSelect");
 let preescolar = [];
 let primaria = [];
 let secundaria = [];
+let educacion_abierta = [];
+
 let editingStatus = false;
+
 let editPreescolarId;
 let editPrimariaId;
 let editSecundariaId;
+let editEducacionAbiertaId;
 
 //Preescolar
 const deletePreescolar = async (id) => {
@@ -204,7 +222,10 @@ const getPreescolar = async (identifier) => {
     console.log(secundaria);
     console.log("---------------------")
     renderSecundaria(secundaria);
-  } 
+  } else if(identifier == 4){
+    educacion_abierta = await main.getEducacionAbierta();
+    renderEducacionAbierta(educacion_abierta);
+  }
 
 };
 
@@ -453,6 +474,123 @@ const deleteSecundaria = async (id) => {
  }
 
 
+//Educacion Abierta
+
+const deleteEducacionAbierta = async (id) => {
+ 
+  try{
+ 
+ await educacionAbiertaForm.focus();
+ 
+     await main.deleteEducacionAbierta(id);
+     await getPreescolar(4);
+     await educacionAbiertaForm.focus();
+
+  }catch(error){
+   console.log(error);
+  }
+  await educacionAbiertaForm.focus();
+ };
+ 
+ const editEducacionAbierta = async (id) => {
+   const educacion_abierta = await main.getEducacionAbiertaById(id);
+   educacionAbiertaName.value = educacion_abierta.Nombre_Institucion;
+   educacionAbiertaDireccion.value = educacion_abierta.Direccion;
+   educacionAbiertaTelefono.value = educacion_abierta.Telefono;
+   educacionAbiertaDirector.value = educacion_abierta.Director;
+   educacionAbiertaMatriculaTotal.value = educacion_abierta.Matricula_Total;
+   educacionAbiertaHorario.value = educacion_abierta.Horario;
+  
+   console.log(educacion_abierta);
+   editingStatus = true;
+   editEducacionAbiertaId = id;
+   getPreescolar(4);
+ };
+ 
+ educacionAbiertaForm.addEventListener("submit", async (e) => {
+   try {
+     e.preventDefault();
+ 
+     const educacion_abierta = {
+       Nombre_Institucion: educacionAbiertaName.value,
+       Direccion: educacionAbiertaDireccion.value,
+       Telefono: educacionAbiertaTelefono.value,
+       Director: educacionAbiertaDirector.value,
+       Matricula_Total: educacionAbiertaMatriculaTotal.value,
+       Horario: educacionAbiertaHorario.value,
+     
+     };
+    
+     console.log(educacion_abierta);
+     
+     //console.log(primariaDirector.value);
+     if (!editingStatus) {
+       const savedEducacionAbierta = await main.createEducacionAbierta(educacion_abierta);
+       console.log(savedEducacionAbierta);
+       getPreescolar(4);
+     } else {
+ 
+       const educacionAbiertaUpdated = await main.updateEducacionAbierta(editEducacionAbiertaId, educacion_abierta);
+       console.log(educacionAbiertaUpdated);
+ 
+       // Reset
+       editingStatus = false;
+       editEducacionAbiertaId = "";
+       getPreescolar(4);
+     }
+ 
+     educacionAbiertaForm.reset();
+     educacionAbiertaName.focus();
+     getPreescolar(4);
+   } catch (error) {
+     console.log(error);
+   }
+ });
+ 
+ function renderEducacionAbierta(tasks) {
+  educacionAbiertaList.innerHTML = "";
+   tasks.forEach((t) => {
+    educacionAbiertaList.innerHTML += `
+       <div class="card card-body my-2 animated fadeInLeft">
+    
+  <table class="table wrap-text">
+  
+   <tbody>
+     <tr>
+       <td>
+       <h4>Institución</h4>
+       <p>${t.Nombre_Institucion}</p>
+       <h4>Codigo Presupuestario</h4>
+       <p>${t.Direccion}</p>
+       <h4>Tipo Dirección</h4>
+       <p>${t.Telefono}</p>
+       </td>
+       <td>
+       <h4>Director</h4>
+       <p>${t.Director}</p>
+       <h4>Matrícula Total</h4>
+       <p>${t.Matricula_Total}</p>
+       <h4>Horario</h4>
+       <p>${t.Horario}</p>
+       </td>
+     </tr>
+   </tbody>
+ </table>
+  <p>
+         <button class="btn btn-danger btn-sm" onclick="deleteEducacionAbierta('${t.id}')">
+           BORRAR
+         </button>
+         <button class="btn btn-secondary btn-sm" onclick="editEducacionAbierta('${t.id}')">
+           EDITAR 
+         </button>
+         </p>
+       </div>
+     `;
+   });
+ }
+
+
+
 
 
 let accion = 0;
@@ -470,7 +608,7 @@ document.getElementById('secundariaSelect').addEventListener('click', () => {
 
 })
 document.getElementById('educacionSelect').addEventListener('click', () => {
-
+  getPreescolar(4);
 
 })
 document.getElementById('reset_preescolar').addEventListener('click', () => {
